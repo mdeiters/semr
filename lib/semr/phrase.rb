@@ -5,7 +5,7 @@ module Semr
     def initialize(phrase, &block)
       @original = phrase
       phrase = "^#{phrase}" #match phrase from beginning
-      @regex, @block = Regexp.new(phrase), block
+      @regex, @block = Regexp.new(phrase, Regexp::IGNORECASE), block
     end
 
     def handles?(statement)
@@ -16,8 +16,8 @@ module Semr
     def interpret(statement, translation)
       args = []
       statement.scan(regex) do |match|
-        # match = match.first if match.size == 1
-        args << match       
+        match = match.flatten.first if match.flatten.size == 1
+        args << match
       end
       translation.instance_exec(*args.flatten, &block)
     end

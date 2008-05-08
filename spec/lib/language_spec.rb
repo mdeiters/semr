@@ -13,6 +13,16 @@ module Semr
       language.parse("feature documents")[:result] == 'documents'
     end
   
+    it 'supports multiple word concepts' do
+      language = Language.create do |language|
+        concept :subject, word('first person')
+        phrase 'feature :subject' do |subject|
+          subject
+        end      
+      end    
+      language.parse("feature first person")[:result] == 'first person'
+    end
+    
     it 'supports matching a finite set of words' do
       language = Language.create do |language|
         concept :model, possible_words('Person', 'Friend')
@@ -82,20 +92,32 @@ module Semr
       language.parse('feature events')[:word].should == 'events'
     end
   
-    it 'supports matching lists of a finite set of words' do
-      pending "A, B, and C => [A, B, C]"    
+    it 'processes command only once where phrases defined first take precedence' do
+      language = Language.create do |language|
+        concept :word, any_word
+        phrase 'first :word' do |word|
+          context[:first] = true
+        end
+        phrase 'first :word' do |word|
+          context[:second] = true
+        end          
+      end
+      translation = language.parse('first executed')
+      translation[:first].should == true
+      translation[:second].should be_nil
     end
   
-    it 'supports concepts that have conversion logic in a block' do
-      pending "concept :class, [Person], :as => {|klass| klass.constantize }"
-    end
-  
-    it 'processes commands top down priority' do
-      pending
-    end
-  
-    it 'supports processing multiple commands' do
-      pending
+    it 'supports processing multiple commands separated by period' do
+      language = Language.create do |language|
+        concept :word, any_word
+        phrase 'the first word is :word' do |word|
+          words = context[:word].nil? ? [] : context[:word]
+          words << word
+          context[:word] = words
+        end
+      end
+      statment = 'The first word is word. The first word is help.'
+      language.parse(statment)[:word].should == ['word', 'help']
     end
    
     it 'supports setting context when processing command' do
@@ -108,7 +130,18 @@ module Semr
       language.parse('add the butters to context')[:word].should == 'butters'
     end
    
+    it 'supports matching lists of a finite set of words' do
+      language = Language.create do |language|
+        concept :list, multiple_occurrences_of('one', 'two', 'three')
+        phrase 'add :list to context' do |word|
+          context[:word] = word
+        end
+      end
+      language.parse("add one, two and three to context")[:word].should == ['one', 'two', 'three']
+    end
+  
     it 'supports chaining phrases to aggregate results' do
+      pending 'chaining removes duplication'
       language = Language.create do |language|
         concept :word, any_word
         featured_phrase = phrase 'feature :word' do |subject|
@@ -120,6 +153,10 @@ module Semr
         end
       end
       language.parse("highlight events and feature documents")[:result].should == ['events', 'documents']
-    end  
+    end
+    
+    it 'supports concepts that have conversion logic in a block' do
+      pending "concept :class, [Person], :as => {|klass| klass.constantize }"
+    end
   end
 end

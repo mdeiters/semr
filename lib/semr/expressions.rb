@@ -13,5 +13,10 @@ module Semr
     def words_in_quotes
       '\'([\w\s]+)\''
     end
+    
+    def multiple_occurrences_of(*words)
+      words = words.collect{|word| "(\\b#{word})" }
+      '(?:(?:\s|,|and)|' + words.join('|') + ')*'
+    end
   end
 end

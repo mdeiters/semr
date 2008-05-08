@@ -1,4 +1,5 @@
 TODO
+* arrane model names longes first to shortest to prevent eager eatting
 * Open config/hoe.rb
 * Update missing details (gem description, dependent gems, etc.)
 CHEATSHEET http://www.ilovejackdaniels.com/regular_expressions_cheat_sheet.pdf

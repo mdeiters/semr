@@ -1,5 +1,4 @@
 #support setting @instance variables in phrase blocks
-
 module Semr
   class InvalidConceptError < RuntimeError; end;
   class Language
@@ -39,10 +38,14 @@ module Semr
     
     def parse(statement)
       translation = Translation.new
-      phrases.each do |phrase|
-        if phrase.handles?(statement)
-          translation.phrases_translated << phrase
-          phrase.interpret(statement, translation) 
+      statements = statement.split('.').map{|stmt| stmt.strip}
+      statements.each do |statement|
+        phrases.each do |phrase|
+          if phrase.handles?(statement)
+            translation.phrases_translated << phrase
+            phrase.interpret(statement, translation)
+            break #break loop and process next statement
+          end
         end
       end
       translation
