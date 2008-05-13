@@ -5,7 +5,7 @@ module Semr
     end
     
     def context
-      @context ||= {}
+      @context ||= Hash.new()
     end
     
     def phrases_translated

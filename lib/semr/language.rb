@@ -45,7 +45,7 @@ module Semr
     
     def parse(statement)
       translation = Translation.new
-      statements = statement.split('.').map{|stmt| stmt.strip}
+      statements = statement.split('.').map{|stmt| stmt.strip }
       statements.each do |statement|
         phrases.each do |phrase|
           if phrase.handles?(statement)

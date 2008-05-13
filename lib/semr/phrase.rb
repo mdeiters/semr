@@ -11,7 +11,7 @@ module Semr
     end
 
     def handles?(statement)
-      match = regex.match(statement)
+      match = regex.match(statement) 
       !match.nil?
     end
 
