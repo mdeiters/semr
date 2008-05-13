@@ -3,7 +3,7 @@ TODO
 * Open config/hoe.rb
 * Update missing details (gem description, dependent gems, etc.)
 CHEATSHEET http://www.ilovejackdaniels.com/regular_expressions_cheat_sheet.pdf
-
+Regex http://angryruby.blogspot.com/2007/05/oniguruma-and-named-regexes-in-ruby-18.html
 
 # feature documents tagged with 'NY Roundtable'
 # document named 'Finance Tomorrow' is fresh content

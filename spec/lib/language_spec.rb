@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 module Semr
   describe Language do
-  
+    
     it 'supports word concepts' do
       language = Language.create do |language|
         concept :word, any_word
@@ -34,10 +34,10 @@ module Semr
       language.parse("what Friend is this")[:model].should == 'Friend'
       language.parse("what NoMatch is this")[:model].should be_nil
     end
-  
+    
     it 'supports extracting quoted text' do
       language = Language.create do |language|
-        concept :criteria, words_in_quotes
+        concept :criteria, words_in_quotes, :normalize => by_removing_outer_quotes
         phrase "Person with name :criteria" do |criteria|
           context[:name] = criteria
         end
@@ -47,7 +47,7 @@ module Semr
   
     it 'supports matching multiple concepts' do
       language = Language.create do |language|
-        concept :criteria, words_in_quotes
+        concept :criteria, words_in_quotes, :normalize => by_removing_outer_quotes
         concept :attribute, any_word
         concept :model, word('Person')      
         phrase "Find :model where :attribute is :criteria" do |model, attribute, criteria|
@@ -61,6 +61,16 @@ module Semr
       translation[:attribute].should == 'name'    
       translation[:criteria].should == 'John Adams'
     end
+    
+    it 'supports concepts that have conversion logic in a block' do
+      language = Language.create do |language|
+        concept :number, any_number, :normalize => as_fixnum
+        phrase 'feature :number' do |number|
+          number
+        end      
+      end    
+      language.parse("feature 32")[:result] == 32
+    end
 
     it 'should throw an exception when using unknown concept' do    
       proc{ 
@@ -71,16 +81,6 @@ module Semr
       }.should raise_error(InvalidConceptError)
     end
 
-    it 'supports matching same concept multiple times and adding to an array' do
-      language = Language.create do |language|
-        concept :this, any_word
-        phrase 'feature :this and :this too' do |this|
-          context[:this] = this
-        end
-      end
-      language.parse('feature this and that too')[:this].should == ['this', 'that']    
-    end
-  
     it 'supports phrases with optional words' do
       language = Language.create do |language|
         concept :word, any_word
@@ -132,14 +132,44 @@ module Semr
    
     it 'supports matching lists of a finite set of words' do
       language = Language.create do |language|
-        concept :list, multiple_occurrences_of('one', 'two', 'three')
+        concept :list, multiple_occurrences_of('one', 'two', 'three', 'four'), :normalize => as_list
         phrase 'add :list to context' do |word|
           context[:word] = word
         end
       end
       language.parse("add one, two and three to context")[:word].should == ['one', 'two', 'three']
     end
+    
+    it 'supports matching lists of a finite set of words and with other concepts' do
+      language = Language.create do |language|
+        concept :action,  any_word
+        concept :list,    multiple_occurrences_of('one', 'two', 'three', 'four'), :normalize => as_list
+        phrase ':action :list to context' do |action, list|
+          context[:action] = action
+          context[:list] = list
+        end
+      end
+      language.parse("add one, two and three to context")[:action].should == 'add'
+      language.parse("add one, two and three to context")[:list].should == ['one', 'two', 'three']
+    end
   
+    it 'supports an external grammer file' do
+      test_grammer = File.expand_path(File.dirname(__FILE__)) + '/../test_grammer.rb'
+      language = Language.create(test_grammer)
+      language.parse("feature documents")[:result] == 'documents'
+    end
+   
+    it 'supports matching same concept multiple times and adding to an array' do
+      pending
+      language = Language.create do |language|
+        concept :this, any_word
+        phrase 'feature :this and :this too' do |this|
+          context[:this] = this
+        end
+      end
+      language.parse('feature this and that too')[:this].should == ['that', 'this']    
+    end
+ 
     it 'supports chaining phrases to aggregate results' do
       pending 'chaining removes duplication'
       language = Language.create do |language|
@@ -155,8 +185,8 @@ module Semr
       language.parse("highlight events and feature documents")[:result].should == ['events', 'documents']
     end
     
-    it 'supports concepts that have conversion logic in a block' do
-      pending "concept :class, [Person], :as => {|klass| klass.constantize }"
+    it 'should support optional matches' do
+      pending 'phrase find :something <:optional>'
     end
   end
 end

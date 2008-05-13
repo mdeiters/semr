@@ -2,11 +2,14 @@
 module Semr
   class InvalidConceptError < RuntimeError; end;
   class Language
-    include Expressions    
+    include Expressions
+    include Normalizers
+    
     class << self
-      def create(&block)
+      def create(grammer_file = nil, &block)
        language = Language.new
-       language.instance_eval(&block)
+       language.instance_eval(&block) if block_given?
+       language.instance_eval(IO.readlines(grammer_file).join("\n")) unless grammer_file.nil?
        language
       end
     end
@@ -19,20 +22,24 @@ module Semr
      @phrases ||= []
     end
 
-    def concept(keyword, definition)
-     concepts[keyword] = definition
+    def concept(keyword, definition, options = {})
+     concepts[keyword] = Concept.new(keyword, definition, options)
     end
 
     def phrase(phrase, &block)
      refined_phrase = phrase.dup
      refined_phrase = refined_phrase.gsub(/\<([\w]*)\>\s?/, '(?:\1)?\s?') #ignores optional words
+     phrase_concepts = []
      phrase.symbols.each do |symbol|
        if concepts[symbol].nil?
          raise InvalidConceptError.new("#{symbol} is not a valid concept.") 
        end
-       refined_phrase = refined_phrase.gsub(":#{symbol}", concepts[symbol].to_regexp )
+       phrase_concepts << concepts[symbol]
+       regexp = concepts[symbol].definition.to_regexp
+       final = "(?<#{symbol}>#{regexp})"
+       refined_phrase = refined_phrase.gsub(":#{symbol}", final)
      end
-     phrases << Phrase.new(refined_phrase, &block)
+     phrases << Phrase.new(phrase_concepts, refined_phrase, &block)
      phrase
     end
     
