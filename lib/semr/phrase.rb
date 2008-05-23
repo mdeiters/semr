@@ -1,13 +1,32 @@
 module Semr
+  class InvalidConceptError < RuntimeError; end;
   class Phrase
     attr_reader :regex, :block
 
-    def initialize(concepts, phrase, &block)
-      @concepts = concepts
-      @original = phrase
-      phrase = "^#{phrase}" #match phrase from beginning..$
-      #@regex, @block = Regexp.new(phrase, Regexp::IGNORECASE), block
-      @regex, @block = Oniguruma::ORegexp.new(phrase, :options => Oniguruma::OPTION_IGNORECASE), block      
+    # ^ matches phrase from beginning, should we use $
+    # regex = Regexp.new(phrase, Regexp::IGNORECASE) <- fall back when oniguruma not installed
+    def initialize(all_concepts, phrase, &block)
+      refined_phrase = remove_optional_words(phrase)
+      phrase.symbols.each do |symbol|
+        if all_concepts[symbol].nil?
+          raise InvalidConceptError.new("Unable to create phrase because :#{symbol} concept has not been defined.")  
+        else
+          concept = all_concepts[symbol]
+          concepts << concept
+          concept_matcher = "(?<#{symbol}>#{concept.definition.to_regexp})"
+          refined_phrase = refined_phrase.gsub(":#{symbol}", concept_matcher)
+        end
+      end
+      @original = "^#{refined_phrase}"
+      @regex, @block = Oniguruma::ORegexp.new(@original, :options => Oniguruma::OPTION_IGNORECASE), block      
+    end
+
+    def concepts
+      @concepts ||= []
+    end
+    
+    def remove_optional_words(phrase)
+      phrase.gsub(/\<([\w]*)\>\s?/, '(?:\1)?\s?')
     end
 
     def handles?(statement)

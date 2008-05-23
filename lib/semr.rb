@@ -5,6 +5,7 @@ require 'oniguruma' #http://oniguruma.rubyforge.org
 $:.unshift(File.dirname(__FILE__)) unless
   $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
+require File.expand_path(File.dirname(__FILE__) + "/semr/dictionary")
 require File.expand_path(File.dirname(__FILE__) + "/semr/translation")
 require File.expand_path(File.dirname(__FILE__) + "/semr/expressions")
 require File.expand_path(File.dirname(__FILE__) + "/semr/normalizers")

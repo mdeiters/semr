@@ -17,7 +17,10 @@ module Semr
       def with_plurals
         plural_inflections = []
         @inflections.each do |inflection|
-          plural_inflections << inflection.pluralize
+          root = Dictionary.find_root(inflection)
+          pluralized_inflection = inflection.pluralize
+          Dictionary.register(pluralized_inflection, root)
+          plural_inflections << pluralized_inflection
         end
         @inflections.unshift plural_inflections
         #@inflections << plural_inflections - need to test, plurals screws up regex
@@ -27,9 +30,11 @@ module Semr
       
       def with_synonyms
         @models.each do |model|
-          @inflections << model.synonyms unless model.synonyms.nil? || model.synonyms.empty?
+          model.synonyms.each do |synonym|
+            Dictionary.register(synonym, model.name)
+            @inflections << synonym
+          end unless model.synonyms.nil? || model.synonyms.empty?
         end
-        @inflections.flatten!
         self
       end
       

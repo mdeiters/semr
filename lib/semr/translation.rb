@@ -3,7 +3,7 @@ module Semr
     def [] arg
       context[arg]
     end
-    
+
     def context
       @context ||= Hash.new()
     end

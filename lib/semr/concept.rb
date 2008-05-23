@@ -9,7 +9,13 @@ module Semr
     
     def normalize(match)
       result = arrayify(match) 
-      result = @options[:normalize].call(result) if @options[:normalize]
+      if @options[:normalize]
+        normalizers = @options[:normalize]
+        normalizers = [normalizers] unless normalizers.is_a? Array
+        normalizers.each do |normalizer|
+          result = normalizer.call(result) 
+        end
+      end
       result
     end
     

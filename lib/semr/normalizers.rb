@@ -20,5 +20,13 @@ module Semr
       proc { |value| value.split(/,|and/).map{|item| item.strip.classify.constantize } }
     end
     
+    def lookup_synonyms
+      proc { |value| Dictionary.find_root(value) }
+    end
+    
+    def each_item(block)
+      proc { |value| value.map{|item| block.call(item) } }
+    end
+          
   end
 end

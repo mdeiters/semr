@@ -7,10 +7,10 @@ rescue LoadError
 end
 
 require 'rubygems'
+require 'oniguruma' #http://oniguruma.rubyforge.org
 require 'mocha'
 require 'active_record'
 require 'active_support'
-require 'oniguruma' #http://oniguruma.rubyforge.org
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'semr'
