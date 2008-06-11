@@ -3,7 +3,7 @@ License
 Manifest.txt
 README.txt
 Rakefile
-example.rb
+TODO
 lib/semr.rb
 lib/semr/concept.rb
 lib/semr/dictionary.rb

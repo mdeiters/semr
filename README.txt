@@ -1,111 +1,38 @@
-TODO
-* arrane model names longes first to shortest to prevent eager eatting
-* Open config/hoe.rb
-* Update missing details (gem description, dependent gems, etc.)
-CHEATSHEET http://www.ilovejackdaniels.com/regular_expressions_cheat_sheet.pdf
-Regex http://angryruby.blogspot.com/2007/05/oniguruma-and-named-regexes-in-ruby-18.html
+Prerequisites
+=============
 
-# feature documents tagged with 'NY Roundtable'
-# document named 'Finance Tomorrow' is fresh content
-# filterable on tags 'NY Roundtable', 'Chicago Roundtable' and 'Popular'
-# filterable on event names
-# add job board
-# add job board with latest 5 posts
-# add poll 'What should be our 2009 strategy?'
-# add blog 'http://www.bill-gates.com/rss'
-# add news for LGE
-# show people and highlight my friends
+The semr gem uses the oniguruma library to leverage more mature regular expression features. This library is part of ruby 1.9 but we need to install it if running ruby 1.8.
+More info on gem: http://oniguruma.rubyforge.org/
 
-# Structure
-# action subject qualifier
-# subject qualifier action ?
+On Windows
+1. gem install oniguruma
 
-# Action:
-# - feature: determines features collection
-# - highlight: styles entity
-# - add: enable widget
-# - filter: 
+On Mac
+1. Unzip: /install/onig-5.9.1.tar
+2. cd to  /install/onig-5.9.1
+3. Execute: ./configure
+4. Execute: make
+5. Execute: sudo make install
+6. gem install oniguruma
 
-# Subjects: (all models - support human name)
-# - event
-# - person
-# - document (alias: asset)
+Basics
+======
 
-# Qualifiers (any attribute)
-# - titled (alias: named)
-# - tagged
-# - next month / latest (other date parameters)
+See the example.rb for an example of creating a language (grammar).
 
-
-# FEATURE
-# feature document named 'Finance Tomorrow' => Asset.find_by_title('Finance Tomorrow')
-# feature latest 3 events => Event.find(:all, :order_by => :start_date, :limit => 3 )
-
-# complexity - representing time
-
-
-* admin and usrs can share same url endpoint - but need to discuss post V1 - Michael Janosky E&Y
-* covered major bucket - SOW
-
-
-language.create do
-  end_of_command_when '.', "\n"
-  
-  concept :models, :patterns => ['Authors', 'Documents']
-  concept :number, :regex => /something/
-  concept :number, :models => Author
-  #models will alway be turned into a class
-  concept :models, :pattern => 'some text'
-                   :prepare => as.constant
-                   :prepare => by |text|
-                    
-                   end
-  
-  concept :part, :phrase => phrase(":model with :attribute ':text'") do |model, attribute, text|
-  
-  end
-  
-  phrase [':number latest :model', 'latest :number model'] do |number, model|
-    model.find_where
-  end.as_concept(:latest)
-  
-  phrase ['feature :latest', 'feature :part'] do |result|
-    contect[:featured] << part
-  end
-  
-  phrase ':number most recent :model' do |number, model|
-    model.find_where
-  end
-  
-  phrase "Feature :model with :attribute ':text'" do |model, attribute, text|
-    context[:result] << model.find_by_attribute(text)
-  end
-
-  phrase "Feature :part" do |part|
-    context[:featured] << part
-  end
-  
-  phrase "Highlight :part" do |part|
-    context[:highlighted] << part
-  end
-  
-                   
-  synonmys_for "Person", 'friends', 
-                   
-                   as.integer
-                   as.date  
-  
-end
-
-context = semantic_processer.parse('some text')
-context[:featured]
+Describe:
+  * Language
+  * Concept
+    - normalizers
+    - expressions
+  * Phrase
 
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2008 FIX
+Copyright (c) 2008 Matthew Deiters
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

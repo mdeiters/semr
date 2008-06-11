@@ -12,12 +12,13 @@ require 'mocha'
 require 'active_record'
 require 'active_support'
 
-$:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'semr'
-
 Spec::Runner.configure do |config|
   config.mock_with :mocha  
 end
+
+$:.unshift(File.dirname(__FILE__) + '/../lib')
+require 'semr'
+
 
 def create_regex(expression)
   Oniguruma::ORegexp.new(expression)
