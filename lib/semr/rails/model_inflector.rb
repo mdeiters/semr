@@ -3,17 +3,17 @@ module Semr
     class ModelInflector
       class << self
         def all
-          ModelInflector.new ::ActiveRecord::Base.send(:subclasses)          
+          ModelInflector.new ::ActiveRecord::Base.descendants
         end
       end
-      
+
       attr_reader :models, :inflections
-      
+
       def initialize(models)
         @models = models
         @inflections = models.collect{|klass| klass.name.to_s }
-      end 
-      
+      end
+
       def with_plurals
         plural_inflections = []
         @inflections.each do |inflection|
@@ -27,7 +27,7 @@ module Semr
         @inflections.flatten!
         self
       end
-      
+
       def with_synonyms
         @models.each do |model|
           model.synonyms.each do |synonym|
@@ -37,11 +37,11 @@ module Semr
         end
         self
       end
-      
+
       def and
         self
       end
-      
+
       def to_a
         @inflections
       end
@@ -49,15 +49,15 @@ module Semr
   end
 end
 
-# require 'find'      
+# require 'find'
 #     Find.find("#{RAILS_ROOT}/app/models/") do |path|
 #       require path if File.exist?(path) && !File.directory?(path) && File.rb?(path)
-#     end      
+#     end
 #   end
-# 
+#
 #   class File
 #     def File.rb?(path)
 #       path.split('.').last == 'rb'
 #     end
-#   end    
-#   
+#   end
+#

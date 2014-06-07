@@ -6,7 +6,6 @@ require "semr/language"
 require "semr/concept"
 require "semr/phrase"
 require "semr/extensions/string"
-require "semr/extensions/object"
 if defined? ActiveRecord
   require "semr/rails/model_inflector"
   require "semr/rails/model_synonym"

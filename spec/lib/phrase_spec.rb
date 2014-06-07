@@ -3,8 +3,7 @@ require 'spec_helper'
 module Semr
   describe Phrase do
 
-    it 'should work' do
-      true.should be_true
+    xit 'should work' do
     end
 
   end

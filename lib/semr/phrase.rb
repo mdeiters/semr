@@ -41,7 +41,10 @@ module Semr
         end
       end
       # args = args.first if args.size == 1
-      translation.instance_exec(*args, &block)
+      local_block = block
+      translation.instance_eval do
+        local_block.call(*args)
+      end
     end
 
     def debug(match)

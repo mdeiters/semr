@@ -3,24 +3,24 @@ require 'spec_helper'
 describe String do
 
   it 'should indicate when it starts with some text' do
-    'hi there'.starts_with?('hi').should be_true
-    'bye now'.starts_with?('hi').should_not be_true
+    expect('hi there').to start_with('hi')
+    expect('bye now').to_not start_with('hi')
   end
 
   it 'should convert a string into a symbol' do
-    'asdf'.symbolize.should == :asdf
-    ':asdf'.symbolize.should == :asdf
+    expect('asdf'.symbolize).to eq :asdf
+    expect(':asdf'.symbolize).to eq :asdf
   end
 
   it 'should find all occurances of symbol' do
     found_symbols = "here is a :symbol and here is :another one".symbols
-    found_symbols.should have(2).symbols
-    found_symbols.should include(:symbol)
-    found_symbols.should include(:another)
+    expect(found_symbols.length).to eq 2
+    expect(found_symbols).to include(:symbol)
+    expect(found_symbols).to include(:another)
   end
 
   it 'should convert string into a regular expression group' do
-    "asdf".to_regexp.should == 'asdf'
+    expect("asdf".to_regexp).to eq 'asdf'
   end
 
 end

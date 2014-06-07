@@ -5,6 +5,7 @@ Bundler.setup
 require 'active_record'
 require 'active_support'
 require 'semr'
+require 'pry'
 
 RSpec.configure do |config|
   config.mock_framework = :mocha

@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec"
   s.add_development_dependency "mocha"
   s.add_development_dependency "rails"
+  s.add_development_dependency "pry"
   s.homepage = %q{http://rubygems.org/gems/semr}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{0.3.0}
