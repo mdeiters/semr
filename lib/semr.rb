@@ -1,20 +1,15 @@
-require 'rubygems'
-
-
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
-
-require File.expand_path(File.dirname(__FILE__) + "/semr/dictionary")
-require File.expand_path(File.dirname(__FILE__) + "/semr/translation")
-require File.expand_path(File.dirname(__FILE__) + "/semr/expressions")
-require File.expand_path(File.dirname(__FILE__) + "/semr/normalizers")
-require File.expand_path(File.dirname(__FILE__) + "/semr/language")
-require File.expand_path(File.dirname(__FILE__) + "/semr/concept")
-require File.expand_path(File.dirname(__FILE__) + "/semr/phrase")
-require File.expand_path(File.dirname(__FILE__) + "/semr/extensions/string")
-require File.expand_path(File.dirname(__FILE__) + "/semr/extensions/object")
+require "semr/dictionary"
+require "semr/translation"
+require "semr/expressions"
+require "semr/normalizers"
+require "semr/language"
+require "semr/concept"
+require "semr/phrase"
+require "semr/extensions/string"
+require "semr/extensions/object"
 if defined? ActiveRecord
-  require File.expand_path(File.dirname(__FILE__) + "/semr/rails/model_inflector")
-  require File.expand_path(File.dirname(__FILE__) + "/semr/rails/model_synonym")
+  require "semr/rails/model_inflector"
+  require "semr/rails/model_synonym"
   ActiveRecord::Base.extend Semr::Rails::ModelSynonym
 end
+

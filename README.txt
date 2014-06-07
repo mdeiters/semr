@@ -1,20 +1,3 @@
-Prerequisites
-=============
-
-The semr gem uses the oniguruma library to leverage more mature regular expression features. This library is part of ruby 1.9 but we need to install it if running ruby 1.8.
-More info on gem: http://oniguruma.rubyforge.org/
-
-On Windows
-1. gem install oniguruma
-
-On Mac
-1. Unzip: /install/onig-5.9.1.tar
-2. cd to  /install/onig-5.9.1
-3. Execute: ./configure
-4. Execute: make
-5. Execute: sudo make install
-6. gem install oniguruma
-
 Basics
 ======
 

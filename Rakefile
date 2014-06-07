@@ -1,7 +1,5 @@
-require 'config/requirements'
-require 'config/hoe' # setup Hoe + all gem configuration
+require 'rspec/core/rake_task'
 
-Dir['tasks/**/*.rake'].each { |rake| load rake }
+RSpec::Core::RakeTask.new('spec')
 
-Rake::Task[:default].prerequisites.clear #remove testunit
 task :default => :spec
