@@ -48,16 +48,3 @@ module Semr
     end
   end
 end
-
-# require 'find'
-#     Find.find("#{RAILS_ROOT}/app/models/") do |path|
-#       require path if File.exist?(path) && !File.directory?(path) && File.rb?(path)
-#     end
-#   end
-#
-#   class File
-#     def File.rb?(path)
-#       path.split('.').last == 'rb'
-#     end
-#   end
-#
