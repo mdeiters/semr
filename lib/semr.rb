@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'oniguruma' #http://oniguruma.rubyforge.org
 
 
 $:.unshift(File.dirname(__FILE__)) unless
