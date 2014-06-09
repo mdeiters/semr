@@ -3,7 +3,7 @@ module Semr
   class Language
     include Expressions
     include Normalizers
-    
+
     class << self
       def create(grammer_file = nil, &block)
        language = Language.new
@@ -12,7 +12,7 @@ module Semr
        language
       end
     end
-    
+
     def concepts
      @concepts ||= {}
     end
@@ -28,7 +28,7 @@ module Semr
     def phrase(phrase, &block)
       phrases << Phrase.new(concepts, phrase, &block)
     end
-    
+
     def parse(statement)
       translation = Translation.new
       statements = statement.split('.').map{|stmt| stmt.strip } #downcase.

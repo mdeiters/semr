@@ -1,10 +1,9 @@
-require 'rubygems'
 require 'semr'
 
 language = Semr::Language.create do
   concept :number,    any_number, :normalize => as_fixnum
   concept :greeting,  words('hi', 'goodbye', 'hello')
-  
+
   phrase 'say :greeting :number times' do |greeting, number|
     number.times { puts greeting }
   end

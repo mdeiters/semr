@@ -1,27 +1,18 @@
-begin
-  require 'spec'
-rescue LoadError
-  require 'rubygems'
-  gem 'rspec'
-  require 'spec'
-end
+require 'bundler/setup'
 
-require 'rubygems'
-require 'oniguruma' #http://oniguruma.rubyforge.org
-require 'mocha'
+Bundler.setup
+
 require 'active_record'
 require 'active_support'
+require 'semr'
+require 'pry'
 
-Spec::Runner.configure do |config|
-  config.mock_with :mocha  
+RSpec.configure do |config|
+  config.mock_framework = :mocha
 end
 
-$:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'semr'
-
-
 def create_regex(expression)
-  Oniguruma::ORegexp.new(expression)
+  Regexp.new(expression)
 end
 
 def scan(string)
@@ -32,15 +23,15 @@ class Scanner
   def initialize(string)
     @string = string
   end
-  
+
   def for(expression)
-    regexp = Oniguruma::ORegexp.new(expression)
+    regexp = Regexp.new(expression)
     matches = []
-    regexp.scan(@string) do |match|
+    @string.scan(regexp) do |match|
       if block_given?
         yield match
       else
-        matches << match        
+        matches << match
       end
     end
     unless block_given?
